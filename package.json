@@ -1,0 +1,13 @@
+{
+  "name": "vela-047b-disposable-proof",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node dist/server.mjs"
+  }
+}

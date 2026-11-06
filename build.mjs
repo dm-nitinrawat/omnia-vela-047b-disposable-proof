@@ -1,0 +1,11 @@
+import {execFileSync} from 'node:child_process';
+import {mkdirSync,readFileSync,writeFileSync,copyFileSync} from 'node:fs';
+const git=(arg)=>execFileSync('git',['rev-parse',arg],{encoding:'utf8'}).trim();
+const sha=git('HEAD'), tree=git('HEAD^{tree}');
+if(!/^[0-9a-f]{40}$/.test(sha)||!/^[0-9a-f]{40}$/.test(tree)) throw Error('Missing full Git identity');
+const expected=process.argv[2];
+if(expected && expected!==sha) throw Error('Approved source differs; build refused before output');
+mkdirSync('dist',{recursive:true});
+writeFileSync('dist/build.json',JSON.stringify({experiment:'OMNIA-VELA-047B',sha,tree,marker:readFileSync('marker.txt','utf8').trim()}));
+copyFileSync('server.mjs','dist/server.mjs');
+console.log(JSON.stringify({event:'synthetic-build-complete',sha,tree}));
